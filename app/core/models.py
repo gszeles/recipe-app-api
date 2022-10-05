@@ -1,7 +1,6 @@
 """
 Database models.
 """
-from locale import normalize
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
