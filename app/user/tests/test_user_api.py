@@ -74,6 +74,7 @@ class PublicUserApiTests(TestCase):
             'password': 'test-user-password123',
         }
         create_user(**user_details)
+
         payload = {
             'email': user_details['email'],
             'password': user_details['password'],
@@ -107,6 +108,7 @@ class PublicUserApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class PrivateUserApiTests(TestCase):
     """Test API requests that require authentication."""
 
@@ -129,7 +131,7 @@ class PrivateUserApiTests(TestCase):
             'email': self.user.email,
         })
 
-    def test_me_post_not_allowed(self):
+    def test_post_me_not_allowed(self):
         """Test POST is not allowed for the me endpoint."""
         res = self.client.post(ME_URL, {})
 
@@ -137,11 +139,11 @@ class PrivateUserApiTests(TestCase):
 
     def test_update_user_profile(self):
         """Test updating the user profile for the authenticated user."""
-        payload = {'name': 'Updated User', 'password': 'newpassword123'}
+        payload = {'name': 'Updated name', 'password': 'newpassword123'}
 
         res = self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
-        self.assertEqual(res.user.name, payload['name'])
-        self.assertTrue(self.user_check_password(payload['password']))
+        self.assertEqual(self.user.name, payload['name'])
+        self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
